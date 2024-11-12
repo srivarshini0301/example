@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example</title>
+</head>
+<body>
+    <div class="form-container">
+        <form class="form">
+            <input id="search" type="text" class="input" placeholder="search..."/>
+            <button id="clear" class="clear-results">clear</button>
+        </form>
+    </div>
+    <div class="results-container">
+        <ul class="results-list" id="list">
+        </ul>
+    </div>
+
+ <script>
+    //code for capturing search term and displaying it
+    const people = [
+    { name: 'averna'},
+    { name: 'konrad'},
+    { name: 'noffz'},
+    { name: '2d3tech'},
+    { name: '3t b.v'},
+    { name: '6tl'},
+    { name: 'a better complete development engineering firm'},
+    { name: 'a maq s a'},
+    { name: 'a-solution gmbh'},
+    { name: 'a.ms software gmbh'},
+    { name: 'ab test solutions sa de cv'},
+    { name: 'accutrol, llc'},
+    { name: 'ace wave tech'},
+    { name: 'aceworks korea inc'},
+    { name: 'acodaq ltd'},
+    { name: 'acquired data solutions'},
+    { name: 'acs(affliliated construction services)'},
+    { name: 'action technical consulting, inc'},
+    { name: 'ad + t ag(ch)'},
+    { name: 'add pros d.o.o'},
+    { name: 'adobe labs'},
+    { name: 'adriano engineering s. de r.l. de c.v.'},
+    { name: 'advanced digital technology co. ltd.'},
+    { name: 'advanced instrument technologies'},
+    { name: 'advanced test and automation inc.'},
+    { name: 'advanced testing technologies inc'},
+]
+const searchInput = document.getElementById("search");
+searchInput.addEventListener("keypress", (e) => {
+    // inside, we will need to achieve a few things:
+    // 1. declare and assign the value of the event's target to a variable AKA whatever is typed in the search bar
+    if(e.key === 'Enter'){
+        e.preventDefault();
+        var value = e.target.value
+    }
+    // 2. check: if input exists and if input is larger than 0
+    if (value && value.trim().length > 0){
+        // 3. redefine 'value' to exclude white space and change input to all lowercase
+            value = value.trim().toLowerCase()
+        // 4. return the results only if the value of the search is included in the person's name
+        // we need to write code (a function for filtering through our data to include the search input value)
+    } else {
+        // 5. return nothing
+        // input is invalid -- show an error message or show no results
+
+    }
+
+});
+//const clearButton = document.getElementById('clear')
+
+//clearButton.addEventListener("click", () => {
+    // 1. write a function that removes any previous results from the page
+    //clearList()
+//});
+function setList(results){
+
+    for (const person of results){
+        // creating a li element for each result item
+        const resultItem = document.createElement('li')
+
+        // adding a class to each item of the results
+        resultItem.classList.add('result-item')
+
+        // grabbing the name of the current point of the loop and adding the name as the list item's text
+        const text = document.createTextNode(person.name)
+
+        // appending the text to the result item
+        resultItem.appendChild(text)
+
+        // appending the result item to the list
+        list.appendChild(resultItem)
+    }
+}
+searchInput.addEventListener("keypress", (e) => {
+    if(e.key === 'Enter'){
+        var value = e.target.value
+    }
+
+    if (value && value.trim().length > 0){
+         value = value.trim().toLowerCase()
+
+        //returning only the results of setList if the value of the search is included in the person's name
+        setList(people.filter(person => {
+            return person.name.includes(value)
+        }));
+    }
+});
+function clearList(){
+    // looping through each child of the search results list and remove each child
+    while (list.firstChild){
+        list.removeChild(list.firstChild)
+    }
+}
+searchInput.addEventListener("keypress", (e) => {
+    // inside, we will need to achieve a few things:
+    // 1. declare and assign the value of the event's target to a variable AKA whatever is typed in the search bar
+    
+    if(e.key === 'Enter'){
+        var value = e.target.value
+    }
+
+    // 2. check: if input exists and if input is larger than 0
+    if (value && value.trim().length > 0){
+        // 3. redefine 'value' to exclude white space and change input to all lowercase
+         value = value.trim().toLowerCase()
+        // 4. return the results only if the value of the search is included in the person's name
+        // we need to write code (a function for filtering through our data to include the search input value)
+    } else {
+        // 5. return nothing
+        clearList()
+
+    }
+
+});
+function noResults(){
+    // create an element for the error; a list item ("li")
+    const error = document.createElement('li')
+    // adding a class name of "error-message" to our error element
+    error.classList.add('error-message')
+
+    // creating text for our element
+    const text = document.createTextNode('No results found. Sorry!')
+    // appending the text to our element
+    error.appendChild(text)
+    // appending the error to our list element
+    list.appendChild(error)
+}
+function setList(results){
+    clearList()
+    for (const person of results){
+        const resultItem = document.createElement('li')
+        resultItem.classList.add('result-item')
+        const text = document.createTextNode(person.name)
+        resultItem.appendChild(text)
+        list.appendChild(resultItem)
+    }
+
+    if (results.length === 0 ){
+        noResults()
+    }
+}
+// Get the search input element
+const searchBox = document.getElementById('search');
+
+// Add an event listener to capture the search term
+searchBox.addEventListener('keypress', (event) => {
+    // Get the current search term
+    if(event.key === 'Enter'){
+        var searchTerm = event.target.value;
+    }
+    console.log('User is searching for:', searchTerm);
+    window.adobeDataLayer = window.adobeDataLayer || [];
+    console.log(searchTerm);
+    var resultLength;
+    const resultsLength = document.getElementsByClassName("result-item").length;
+    if(resultsLength>0){
+        resultLength = resultsLength;
+    }
+    else{
+        resultLength = "zero";
+    }
+    if (searchTerm){
+        _satellite.track("search");
+        window.adobeDataLayer = [];
+        window.adobeDataLayer.push({
+            "searchData": {
+                "searchTerm": searchTerm,
+                "searchCount": resultLength
+            }
+        });
+    }
+});
+ </script>
+ <script src="https://assets.adobedtm.com/512027f42d3c/57be21d59f4f/launch-5cb97ace41b4-development.min.js" async></script>
+</body>
+</html></html>
