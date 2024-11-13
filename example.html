@@ -81,7 +81,7 @@
 <body>
     <div class="top-nav">
         <ul>
-            <li><a id= "logo" href=""><img src="https://tse1.mm.bing.net/th/id/OIP.slzRpIqSBzhDWj34idp_iQAAAA?rs=1&pid=ImgDetMain"></a></li>
+            <li><a id= "logo" onclick="showDiv()"><img src="https://tse1.mm.bing.net/th/id/OIP.slzRpIqSBzhDWj34idp_iQAAAA?rs=1&pid=ImgDetMain"></a></li>
             <li><a href="default.asp">Home</a></li>
             <li><a href="news.asp">News</a></li>
             <li><a href="contact.asp">Contact</a></li>
@@ -95,12 +95,14 @@
         and sales channel partners ready to help you solve your business challenges. 
         Learn more about the types of NI Partners.
     </p>
-    <p>
-        <h3>
-            Most Searched Partners
-        </h3>
-    </p>
-    <div id="search-terms-container"></div>
+    <div id="msp" style="display: none;">
+        <p>
+            <h3>
+                Most Searched Partners
+            </h3>
+        </p>
+        <div id="search-terms-container"></div>
+    </div>
     <p>
         <h3>
             Search Partners
@@ -117,6 +119,9 @@
         </ul>
     </div>
  <script>
+    function showDiv(){
+        document.getElementById('msp').style.display = "block";
+    }
     window.adobeDataLayer = {};
     //code for capturing search term and displaying it
     const people = [
