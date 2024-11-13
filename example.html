@@ -4,11 +4,111 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Example</title>
+    <style>
+        a{
+            text-decoration: none;
+            color: #14c056;
+        }
+        a:hover{
+            text-decoration: underline;
+        }
+        .result-link > a:link, .result-link > a:visited {
+            color: #14c056;
+            padding: 14px 25px;
+            text-align: center;
+            display: block;
+        }
+
+        .result-link > a:hover, .result-link > a:active {
+            color: #14c056;
+        }
+        .results-list, .search-terms-list {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 10px;
+            padding: 10px;
+        }
+        .results-list > li, .search-terms-list  > li {
+            background-color: rgba(255, 255, 255, 0.8);
+            text-align: center;
+            padding: 20px 0;
+            border: 1px solid #4CAF50;
+            border-radius: 10px;
+        }
+        .results-list, .search-terms-list{
+            list-style-type: none;
+        }
+        .top-nav ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #4CAF50;
+            position: -webkit-sticky; /* Safari */
+            position: sticky;
+            top: 0;
+            height: 41px;
+        }
+
+        .top-nav li {
+            float: left;
+        }
+
+        .top-nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .top-nav li a:hover {
+            background-color: #a7eba9;
+        }
+
+        .top-nav .active {
+            background-color: #4CAF50;
+        }
+        .top-nav ul li a#logo {
+            padding: 0 !important;
+        }
+        .top-nav ul li a img {
+           width: 41px;
+           height: 41px;
+        }
+    </style>
 </head>
 <body>
+    <div class="top-nav">
+        <ul>
+            <li><a id= "logo" href=""><img src="https://tse1.mm.bing.net/th/id/OIP.slzRpIqSBzhDWj34idp_iQAAAA?rs=1&pid=ImgDetMain"></a></li>
+            <li><a href="default.asp">Home</a></li>
+            <li><a href="news.asp">News</a></li>
+            <li><a href="contact.asp">Contact</a></li>
+            <li><a href="about.asp">About</a></li>
+        </ul>
+    </div>
+    <p>
+        <h2>Partner Directory</h2>
+        NI Partners are a global community of solution providers, 
+        systems integrators, consultants, product developers, 
+        and sales channel partners ready to help you solve your business challenges. 
+        Learn more about the types of NI Partners.
+    </p>
+    <p>
+        <h3>
+            Most Searched Partners
+        </h3>
+    </p>
+    <div id="search-terms-container"></div>
+    <p>
+        <h3>
+            Search Partners
+        </h3>
+    </p>
     <div class="form-container">
         <form class="form">
-            <input id="search" type="text" class="input" placeholder="search..."/>
+            <input id="search" type="text" class="input" placeholder="Search Partners"/>
             <button id="clear" class="clear-results">clear</button>
         </form>
     </div>
@@ -16,8 +116,8 @@
         <ul class="results-list" id="list">
         </ul>
     </div>
-
  <script>
+    window.adobeDataLayer = {};
     //code for capturing search term and displaying it
     const people = [
     { name: 'averna'},
@@ -151,9 +251,13 @@ function setList(results){
     clearList()
     for (const person of results){
         const resultItem = document.createElement('li')
+        const resultLink = document.createElement('a')
         resultItem.classList.add('result-item')
+        resultLink.classList.add('result-link')
+        resultLink.setAttribute('href', 'https://www.google.com/');
         const text = document.createTextNode(person.name)
-        resultItem.appendChild(text)
+        resultLink.appendChild(text)
+        resultItem.appendChild(resultLink)
         list.appendChild(resultItem)
     }
 
@@ -163,7 +267,6 @@ function setList(results){
 }
 // Get the search input element
 const searchBox = document.getElementById('search');
-
 // Add an event listener to capture the search term
 searchBox.addEventListener('keypress', (event) => {
     // Get the current search term
@@ -183,16 +286,85 @@ searchBox.addEventListener('keypress', (event) => {
     }
     if (searchTerm){
         _satellite.track("search");
-        window.adobeDataLayer = [];
-        window.adobeDataLayer.push({
+        window.adobeDataLayer = {};
+        adobeDataLayer = {
             "searchData": {
                 "searchTerm": searchTerm,
                 "searchCount": resultLength
             }
-        });
+        };
     }
+    const links = document.querySelectorAll('a.result-link');
+
+    // Add click event listener to each link
+    links.forEach(link => {
+        link.addEventListener('click', function(event) {
+            console.log(this.textContent); // Log the link name
+            var linkName = this.textContent;
+            _satellite.track("link click");
+            window.adobeDataLayer = {};
+            window.adobeDataLayer = {
+                "linkData": {
+                    "linkName": linkName,
+                    "linkSection": "Search Section"
+                }
+            };
+        });
+    });
 });
+// Sample data representing search results
+const searchResults = [
+    { term: "averna", count: 100 },
+    { term: "konrad", count: 120 },
+    { term: "adobe labs", count: 150 },
+    { term: "6tl", count: 60 },
+    { term: "noffz", count: 200 }
+];
+
+// Function to display the most searched terms
+function displayMostSearchedTerms(results) {
+    // Sort the results by count in descending order
+    results.sort((a, b) => b.count - a.count);
+    // Get the container element
+    const container = document.getElementById('search-terms-container');
+    // Create a list of terms
+    const ul = document.createElement('ul');
+    ul.classList.add('search-terms-list');
+    results.forEach(result => {
+        const li = document.createElement('li');
+        li.classList.add('search-terms-link');
+        const searchLink = document.createElement('a')
+        searchLink.classList.add('search-link')
+        searchLink.setAttribute('href', 'https://www.google.com/');
+        searchLink.textContent = `${result.term}`;
+        li.appendChild(searchLink);
+        ul.appendChild(li);
+    });
+
+    // Append the list to the container
+    container.appendChild(ul);
+}
+
+// Call the function to display the terms
+displayMostSearchedTerms(searchResults);
+const mostSearchResultLink = document.querySelectorAll('a.search-link');
+
+    // Add click event listener to each link
+    mostSearchResultLink.forEach(link => {
+        link.addEventListener('click', function(event) {
+            console.log(this.textContent); // Log the link name
+            var linkName = this.textContent;
+            _satellite.track("link click");
+            window.adobeDataLayer = {};
+            window.adobeDataLayer = {
+                "linkData": {
+                    "linkName": linkName,
+                    "linkSection": "Most Searched Section"
+                }
+            };
+        });
+    });
  </script>
- <script src="https://assets.adobedtm.com/512027f42d3c/57be21d59f4f/launch-5cb97ace41b4-development.min.js" async></script>
+ <script src="https://assets.adobedtm.com/824e6bd58518/f9b0d3fd7fd7/launch-afc0b3f1065a-development.min.js" async></script>
 </body>
 </html></html>
